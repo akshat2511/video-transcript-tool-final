@@ -1,11 +1,12 @@
 import { AssemblyAI } from 'assemblyai'
-
+import express from express;
+const app = express();
 const client = new AssemblyAI({
     apiKey: '3ec7b601debf42f584c558d73a58753b'
 });
-let transcript = await client.transcripts.transcribe({
-audio: "./videoplayback1.mp4", language_code:"hi"
-});
+// let transcript = await client.transcripts.transcribe({
+// audio: "./videoplayback1.mp4", language_code:"hi"
+// });
 // const params = {
 //     audio: audioUrl,
 //     language_code: 'hi'
@@ -45,4 +46,18 @@ const subtitles = createSubtitle(words);
 saveSubtitleToFile(subtitles, 'subtitles.srt');
 
 console.log(transcript);
+app.post('/:ak/:lang', async (req, res) => {
+    const ak = req.params.ak;
+    const lang = req.params.lang;
+    let transcript = await client.transcripts.transcribe({
+        audio: ak, language_code: lang
+    });
+    const subtitles = createSubtitle(transcript.words);
+    saveSubtitleToFile(subtitles, 'subtitles.srt');
+    const subtitleFile = fs.readFileSync(subtitles.srt)
+    res.json(transcript);
+
+
+
+})
 
