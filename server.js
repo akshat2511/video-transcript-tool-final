@@ -6,6 +6,8 @@ const { auth } = require('express-openid-connect');
 const path = require('path');
 const { fileURLToPath } = require('url');
 const { log } = require('console');
+const multer=require('multer');
+// const upload = multer({ dest: '/' })
 // const mongoose = require('mongoose');
 // Initialize environment variables
 dotenv.config();
@@ -46,7 +48,7 @@ const userDetailsSchema = new Schema({
 const Response = mongoose.model('Response', responseSchema);
 const UserDetails = mongoose.model('UserDetails', userDetailsSchema);
 
-module.exports = { UserDetails, Response };
+// module.exports = { UserDetails, Response };
 
 
 // Set up view engine and paths
@@ -88,7 +90,9 @@ if (!verified) {
     res.render("land.ejs");
   }
 else {
-    let data = req.oidc.user;
+    let data =await  req.oidc.user;
+    await console.log(req.oidc.user);
+    
     let userdata = await UserDetails.find({ email: data.email });
     if (userdata.length == 0) 
       {const u=new UserDetails({email: data.email})
@@ -99,10 +103,62 @@ else {
     //   let userData = await UserDetails.find({ email: userInfo.email});
     //   let userCounter = userData[0].counter + 1;
     //   await user.findOneAndUpdate({ email: data.email }, { counter: userCounter });
-      res.render("logedin.ejs", { userData: userdata, photo: photo });
+      res.render("logedin.ejs", { userData: data, photo: photo,tran:'Transcription will be available once the video has been processed.' });
     
   }
+  
 });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Upload directory (ensure it exists or create it)
+    },
+    filename: (req, file, cb) => {
+    //   const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    //   cb(null, 'akshat'); // Generate a unique name
+    const extension = path.extname(file.originalname); // Get file extension
+    cb(null, `akshat${extension}`);
+    }
+  });
+  
+  // Initialize multer with storage settings
+  const upload = multer({ 
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+      // Only allow video files
+      if (file.mimetype.startsWith('video/')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only video files are allowed!'), false);
+      }
+    }
+  });
+  
+  // Define the route to handle video upload
+  app.post('/', upload.single('videoFile'), async(req, res) => {
+    if (req.file) {
+        let transcript = await client.transcripts.transcribe({
+            audio: './uploads/akshat.mp4', 
+        });
+        console.log(transcript);
+        let data =await  req.oidc.user;
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
+
+        
+
+
+
+    } else {
+      res.status(400).json({ error: 'Please upload a valid video file.' });
+    }
+  });
+
+
+// app.post('/',upload.single('videoFile'),(req, res) => {
+//     res.redirect('/')
+
+
+// });
+
 
 const createSubtitle = (words) => {
     const formatTime = (timeInMs) => {
@@ -139,7 +195,7 @@ app.post('/:ak/:lang', async (req, res) => {
     const ak = req.params.ak;
     const lang = req.params.lang;
     let transcript = await client.transcripts.transcribe({
-        audio: ak, language_code: lang
+        audio: ak, language_code: en
     });
     const subtitles = createSubtitle(transcript.words);
     saveSubtitleToFile(subtitles, 'subtitles.srt');
