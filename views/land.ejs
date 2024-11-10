@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Inter, "Noto Sans", sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #f0f2f5 0%, #ffffff 100%);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        .pricing-card:hover {
+            border-color: #2094f3;
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="border-b border-[#f0f2f5] px-10 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="size-4">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="#111518"></path>
+                    </svg>
+                </div>
+                <h2 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em]">VidTranscribe</h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <a href="#features" class="text-[#111518] text-sm font-medium hover:text-[#2094f3]">Features</a>
+                <a href="#pricing" class="text-[#111518] text-sm font-medium hover:text-[#2094f3]">Pricing</a>
+                <button onclick="showLogin()" class="bg-[#2094f3] text-white px-6 py-2 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-bg min-h-[600px] flex items-center justify-center px-4">
+        <div class="text-center max-w-4xl">
+            <h1 class="text-5xl font-bold text-[#111518] mb-6">Transform Your Videos with AI-Powered Transcription</h1>
+            <p class="text-xl text-[#60778a] mb-8">Get accurate transcriptions, translations, and insights from your videos in minutes</p>
+            <button onclick="showLogin()" class="bg-[#2094f3] text-white px-8 py-4 rounded-xl font-bold text-lg tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                Get Started Free
+            </button>
+            <p class="mt-4 text-[#60778a]">Start with 5 free credits!</p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="py-20 px-10">
+        <h2 class="text-3xl font-bold text-center text-[#111518] mb-12">Powerful Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div class="feature-card bg-white p-6 rounded-xl border border-[#dbe1e6] transition-all">
+                <div class="text-[#2094f3] mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#111518] mb-2">Accurate Transcription</h3>
+                <p class="text-[#60778a]">State-of-the-art AI technology for precise speech-to-text conversion</p>
+            </div>
+            <div class="feature-card bg-white p-6 rounded-xl border border-[#dbe1e6] transition-all">
+                <div class="text-[#2094f3] mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#111518] mb-2">Multi-Language Support</h3>
+                <p class="text-[#60778a]">Translate transcripts into multiple languages instantly</p>
+            </div>
+            <div class="feature-card bg-white p-6 rounded-xl border border-[#dbe1e6] transition-all">
+                <div class="text-[#2094f3] mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-[#111518] mb-2">Smart Search</h3>
+                <p class="text-[#60778a]">Easily search through your transcripts with advanced query capabilities</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Section -->
+    <div id="pricing" class="py-20 px-10 bg-[#f0f2f5]">
+        <h2 class="text-3xl font-bold text-center text-[#111518] mb-4">Simple, Transparent Pricing</h2>
+        <p class="text-center text-[#60778a] mb-12">Start with 5 free credits! Choose the plan that works best for you.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <!-- Free Tier -->
+            <div class="pricing-card relative bg-white p-6 rounded-xl border-2 border-[#dbe1e6] transition-all">
+                <h3 class="text-xl font-bold text-[#111518] mb-4">Free</h3>
+                <div class="text-3xl font-bold text-[#111518] mb-2">
+                    5 Credits
+                    <span class="text-base font-normal text-[#60778a]">Free</span>
+                </div>
+                <p class="text-[#60778a] mb-6">Perfect for trying out our service</p>
+                <button onclick="showLogin()" class="w-full bg-[#f0f2f5] text-[#111518] py-2 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#e4e7ea] transition-colors">
+                    Get Started
+                </button>
+            </div>
+
+            <!-- Basic Package -->
+            <div class="pricing-card relative bg-white p-6 rounded-xl border-2 border-[#dbe1e6] transition-all">
+                <h3 class="text-xl font-bold text-[#111518] mb-4">Basic</h3>
+                <div class="text-3xl font-bold text-[#111518] mb-2">
+                    10 Credits
+                    <span class="text-base font-normal text-[#60778a]">₹100</span>
+                </div>
+                <p class="text-[#60778a] mb-6">Great for occasional use</p>
+                <button onclick="showLogin()" class="w-full bg-[#2094f3] text-white py-2 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                    Choose Plan
+                </button>
+            </div>
+
+            <!-- Standard Package -->
+            <div class="pricing-card relative bg-white p-6 rounded-xl border-2 border-[#2094f3] transition-all">
+                <div class="popular-badge bg-[#2094f3] text-white px-4 py-1 rounded-full text-sm font-medium">Most Popular</div>
+                <h3 class="text-xl font-bold text-[#111518] mb-4">Standard</h3>
+                <div class="text-3xl font-bold text-[#111518] mb-2">
+                    20 Credits
+                    <span class="text-base font-normal text-[#60778a]">₹160</span>
+                </div>
+                <p class="text-[#60778a] mb-6">Perfect for regular use</p>
+                <button onclick="showLogin()" class="w-full bg-[#2094f3] text-white py-2 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                    Choose Plan
+                </button>
+            </div>
+
+            <!-- Pro Package -->
+            <div class="pricing-card relative bg-white p-6 rounded-xl border-2 border-[#dbe1e6] transition-all">
+                <h3 class="text-xl font-bold text-[#111518] mb-4">Pro</h3>
+                <div class="text-3xl font-bold text-[#111518] mb-2">
+                    30 Credits
+                    <span class="text-base font-normal text-[#60778a]">₹210</span>
+                </div>
+                <p class="text-[#60778a] mb-6">Best value for power users</p>
+                <button onclick="showLogin()" class="w-full bg-[#2094f3] text-white py-2 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                    Choose Plan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold text-[#111518] mb-6">Welcome Back</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-[#111518] text-base font-medium mb-2">Email</label>
+                    <input type="email" required class="w-full p-3 rounded-xl border border-[#dbe1e6] focus:border-[#2094f3] outline-none" />
+                </div>
+                <div class="mb-6">
+                    <label class="block text-[#111518] text-base font-medium mb-2">Password</label>
+                    <input type="password" required class="w-full p-3 rounded-xl border border-[#dbe1e6] focus:border-[#2094f3] outline-none" />
+                </div>
+                <button type="submit" class="w-full bg-[#2094f3] text-white py-3 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+                    Login
+                </button>
+            </form>
+            <button onclick="hideLogin()" class="mt-4 text-[#60778a] text-sm hover:text-[#111518]">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+    window.location.href = 'http://localhost:5000/login';
+}
+
+
+
+        function hideLogin() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // Here you would typically handle the login authentication
+            // For demo purposes, we'll just redirect to the main app
+            window.location.href = '/app'; // Update this to your app's URL
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideLogin();
+            }
+        });
+    </script>
+</body>
+</html>
