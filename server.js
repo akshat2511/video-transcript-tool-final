@@ -140,7 +140,8 @@ const storage = multer.diskStorage({
             audio: './uploads/akshat.mp4', 
         });
         console.log(transcript);
-        let data =await  req.oidc.user;
+        let data =  req.oidc.user;
+        
         res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
 
         
