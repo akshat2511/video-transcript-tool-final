@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <title>Dashboard</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900"
-    />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: Inter, "Noto Sans", sans-serif;
         }
+
         .dashboard-card:hover {
             border-color: #2094f3;
             transition: border-color 0.3s ease;
         }
     </style>
 </head>
+
 <body class="bg-[#f0f2f5]">
     <!-- Navigation -->
     <nav class="bg-white border-b border-[#f0f2f5] px-10 py-3">
@@ -24,17 +26,20 @@
             <div class="flex items-center gap-4">
                 <div class="size-4">
                     <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="#111518"></path>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="#111518"></path>
                     </svg>
                 </div>
                 <h2 class="text-[#111518] text-lg font-bold leading-tight tracking-[-0.015em]">VidTranscribe</h2>
             </div>
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-3">
-                    <span class="text-[#111518] font-medium"><%=data.name%></span>
+                    <span class="text-[#111518] font-medium">
+                        <%=data.name%>
+                    </span>
                     <a href="/logout"><img src="<%=data.picture%>""
                         style=" height: 40px; width: 40px; border-radius: 50%;">
-                  </a>
+                    </a>
                 </div>
             </div>
         </div>
@@ -46,22 +51,28 @@
             <div class="dashboard-card bg-white p-6 rounded-xl border border-[#dbe1e6]">
                 <h3 class="text-lg font-bold text-[#111518] mb-4">Available Credits</h3>
                 <div class="flex items-end gap-3">
-                    <span class="text-3xl font-bold text-[#2094f3]"><%=user.creditsLeft%></span>
+                    <span class="text-3xl font-bold text-[#2094f3]">
+                        <%=user.creditsLeft%>
+                    </span>
                     <span class="text-[#60778a] mb-1">credits remaining</span>
                 </div>
                 <button onclick="showUpgradeModal()" class="mt-4 text-[#2094f3] text-sm font-medium hover:underline">
                     Get more credits →
                 </button>
             </div>
-            
+
             <div class="dashboard-card bg-white p-6 rounded-xl border border-[#dbe1e6]">
                 <div class="flex flex-col items-center">
                     <div class="size-32 rounded-full bg-[#2094f3] flex items-center justify-center mb-4">
                         <img src="<%=data.picture%>""
                         style=" height: 125px; width: 125px; border-radius: 50%;">
                     </div>
-                    <h3 class="text-xl font-bold text-[#111518]"><%=data.name%></h3>
-                    <p class="text-[#60778a]"><%=data.email%></p>
+                    <h3 class="text-xl font-bold text-[#111518]">
+                        <%=data.name%>
+                    </h3>
+                    <p class="text-[#60778a]">
+                        <%=data.email%>
+                    </p>
                 </div>
             </div>
         </div>
@@ -79,7 +90,8 @@
                     </svg>
                 </div>
             </div> -->
-            <button onclick="startNewTranscription()" class="bg-[#2094f3] text-white px-6 py-3 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
+            <button onclick="startNewTranscription()"
+                class="bg-[#2094f3] text-white px-6 py-3 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors">
                 New Transcription
             </button>
         </div>
@@ -97,97 +109,176 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% user.responses.forEach((x) => { %>
+                        <% user.responses.forEach((x)=> { %>
                             <tr class="border-b border-[#f0f2f5]">
                                 <td class="px-6 py-4 text-[#60778a] w-1/4">
-                                    <%= `${x.date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' })} : ${x.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}` %>
+                                    <%= `${x.date.toLocaleDateString('en-US', { weekday: 'long' , day: 'numeric' ,
+                                        month: 'numeric' , year: 'numeric' })} : ${x.date.toLocaleTimeString('en-US', {
+                                        hour: '2-digit' , minute: '2-digit' , hour12: true })}` %>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <%= x.transcript.length > 50 ? x.transcript.slice(0, 50) + "..." : x.transcript %>
+                                    <%= x.transcript.length> 50 ? x.transcript.slice(0, 50) + "..." : x.transcript %>
                                 </td>
                                 <td class="px-6 py-4">
                                     <form action="/ask" method="POST">
                                         <input type="hidden" name="transcript" value="<%= x.transcript %>" />
-                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Ask</button>
+                                        <button type="submit"
+                                            class="bg-blue-500 text-white px-4 py-2 rounded">Ask</button>
                                     </form>
                                 </td>
                             </tr>
-                        <% }) %>
+                            <% }) %>
                     </tbody>
                 </table>
-                
-                
+
+
             </div>
         </div>
     </div>
 
     <!-- Upgrade Plan Modal -->
     <div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+        <form class="bg-white rounded-xl p-8 max-w-md w-full mx-4" action="/payment" method="post">
             <h2 class="text-2xl font-bold text-[#111518] mb-6">Upgrade Plan</h2>
             <div class="space-y-4">
-                <div class="p-4 border border-[#dbe1e6] rounded-xl hover:border-[#2094f3] cursor-pointer">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-[#111518]">Basic</h3>
-                            <p class="text-[#60778a]">10 Credits</p>
-                        </div>
-                        <span class="font-bold text-[#111518]">₹100</span>
+                <label
+                    class="p-4 border border-[#dbe1e6] rounded-xl hover:border-[#2094f3] cursor-pointer flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-[#111518]">Basic</h3>
+                        <p class="text-[#60778a]">10 Credits</p>
                     </div>
-                </div>
-                <div class="p-4 border border-[#2094f3] rounded-xl bg-blue-50">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-[#111518]">Standard</h3>
-                            <p class="text-[#60778a]">20 Credits</p>
-                        </div>
-                        <span class="font-bold text-[#111518]">₹160</span>
+                    <span class="font-bold text-[#111518]">₹100</span>
+                    <input type="radio" name="plan" value="basic" class="ml-4 accent-[#2094f3]" />
+                </label>
+                <label class="p-4 border border-[#2094f3] rounded-xl bg-blue-50 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-[#111518]">Standard</h3>
+                        <p class="text-[#60778a]">20 Credits</p>
                     </div>
-                </div>
-                <div class="p-4 border border-[#dbe1e6] rounded-xl hover:border-[#2094f3] cursor-pointer">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-[#111518]">Pro</h3>
-                            <p class="text-[#60778a]">30 Credits</p>
-                        </div>
-                        <span class="font-bold text-[#111518]">₹210</span>
+                    <span class="font-bold text-[#111518]">₹160</span>
+                    <input type="radio" name="plan" value="standard" class="ml-4 accent-[#2094f3]" checked />
+                </label>
+                <label
+                    class="p-4 border border-[#dbe1e6] rounded-xl hover:border-[#2094f3] cursor-pointer flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-[#111518]">Pro</h3>
+                        <p class="text-[#60778a]">30 Credits</p>
                     </div>
-                </div>
+                    <span class="font-bold text-[#111518]">₹210</span>
+                    <input type="radio" name="plan" value="pro" class="ml-4 accent-[#2094f3]" />
+                </label>
             </div>
-            <button onclick="upgradePlan()" class="w-full bg-[#2094f3] text-white py-3 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors mt-6">
+            <button type="button" onclick="showPaymentModal(document.querySelector('input[name=plan]:checked').value)"
+                class="w-full bg-[#2094f3] text-white py-3 rounded-xl font-bold text-sm tracking-[0.015em] hover:bg-[#1884e3] transition-colors mt-6">
                 Upgrade Plan
             </button>
-            <button onclick="hideUpgradeModal()" class="w-full text-[#60778a] text-sm hover:text-[#111518] mt-4">
+
+            <button type="button" onclick="hideUpgradeModal()"
+                class="w-full text-[#60778a] text-sm hover:text-[#111518] mt-4">
                 Cancel
             </button>
-        </div>
+        </form>
     </div>
+    <% let opt=options %>
+        <script src="https://checkout.razorpay.com/v1/checkout.js">
+            console.log(options);
+            if (opt) {
+                const paymentObject = new window.Razorpay(opt);
+                paymentObject.open();
+            }
+        </script>
+        <script>
+            function showUpgradeModal() {
+                document.getElementById('upgradeModal').classList.remove('hidden');
+            }
 
-    <script>
-        function showUpgradeModal() {
-            document.getElementById('upgradeModal').classList.remove('hidden');
-        }
+            function hideUpgradeModal() {
+                document.getElementById('upgradeModal').classList.add('hidden');
+            }
 
-        function hideUpgradeModal() {
-            document.getElementById('upgradeModal').classList.add('hidden');
-        }
-
-        function upgradePlan() {
-            // Handle plan upgrade
-            hideUpgradeModal();
-        }
-
-        function startNewTranscription() {
-            // Handle new transcription
-            window.location.href = '/';
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('upgradeModal').addEventListener('click', function(e) {
-            if (e.target === this) {
+            function upgradePlan() {
+                // Handle plan upgrade
                 hideUpgradeModal();
             }
-        });
-    </script>
+
+            function startNewTranscription() {
+                // Handle new transcription
+                window.location.href = '/';
+            }
+
+            // Close modal when clicking outside
+            document.getElementById('upgradeModal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    hideUpgradeModal();
+                }
+            });
+
+            async function showPaymentModal(plan) {
+                try {
+                    const response = await fetch('/payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ plan }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to create payment');
+                    }
+
+                    const options = await response.json();
+                    const razorpay = new Razorpay(options);
+
+                    razorpay.on('payment.failed', function (response) {
+                        alert('Payment failed. Please try again.');
+                        console.error(response.error);
+                    });
+
+                    razorpay.open();
+
+                    let credit = 20;
+                    if (plan == "basic") {
+                        credit = 10;
+                    } else if (plan == "standard") {
+                        credit = 20;
+                    } else {
+                        credit = 30;
+                    }
+
+                    const data = {
+                        emailId: options.emailId,
+                        credit: credit
+                    };
+                    console.log(data);
+                    
+
+                    const resp = await fetch('/payment/success', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    console.log(await resp.json());
+
+
+                } catch (error) {
+                    console.error(error);
+                    alert('An error occurred while processing the payment.');
+                }
+            }
+
+            // Trigger payment modal from the upgrade modal button
+            document.querySelectorAll('input[name="plan"]').forEach((radio) => {
+                radio.addEventListener('change', () => {
+                    const selectedPlan = radio.value;
+                    showPaymentModal(selectedPlan);
+                });
+            });
+
+        </script>
 </body>
+
 </html>
