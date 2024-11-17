@@ -7,11 +7,16 @@ const path = require('path');
 const { fileURLToPath } = require('url');
 const { log } = require('console');
 const multer=require('multer');
+const bp = require('body-parser');
+
+
 // const upload = multer({ dest: '/' })
 // const mongoose = require('mongoose');
 // Initialize environment variables
 dotenv.config();
 const app = express();
+// app.use(express.json());
+app.use(bp.urlencoded({extended:true}));
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 mongoose.connect(process.env.link)
@@ -141,6 +146,10 @@ const storage = multer.diskStorage({
         });
         console.log(transcript);
         let data =  req.oidc.user;
+        let x=new Response({transcript: transcript.text,date:new Date()});
+        await x.save();
+        console.log(x);
+        let m=await UserDetails.findOneAndUpdate({email:data.email},{$push:{responses:x},$inc:{creditsLeft:-1}})
         
         res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
 
@@ -152,6 +161,30 @@ const storage = multer.diskStorage({
       res.status(400).json({ error: 'Please upload a valid video file.' });
     }
   });
+  app.post('/ask', async(req, res) => {
+    
+    let data =  req.oidc.user;
+        console.log(req.body.transcript);
+        
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:req.body.transcript });
+
+        
+
+
+
+    
+  });
+  app.post('/question', async(req, res) => {
+    
+        
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
+
+      
+  });
+  app.get('/dash', async(req, res) =>{
+    let data = req.oidc.user;const user = await UserDetails.findOne({ email:data.email }).populate('responses');
+    res.render("dash",{ user,data})
+  })
 
 
 // app.post('/',upload.single('videoFile'),(req, res) => {
