@@ -9,7 +9,6 @@ const { log } = require('console');
 const multer=require('multer');
 const bp = require('body-parser');
 
-
 // const upload = multer({ dest: '/' })
 // const mongoose = require('mongoose');
 // Initialize environment variables
@@ -108,7 +107,7 @@ else {
     //   let userData = await UserDetails.find({ email: userInfo.email});
     //   let userCounter = userData[0].counter + 1;
     //   await user.findOneAndUpdate({ email: data.email }, { counter: userCounter });
-      res.render("logedin.ejs", { userData: data, photo: photo,tran:'Transcription will be available once the video has been processed.' });
+      res.render("logedin.ejs", { userData: data, photo: photo,tran:'Transcription will be available once the video has been processed.',ans:" " });
     
   }
   
@@ -137,6 +136,8 @@ const storage = multer.diskStorage({
       }
     }
   });
+
+  
   
   // Define the route to handle video upload
   app.post('/', upload.single('videoFile'), async(req, res) => {
@@ -151,7 +152,7 @@ const storage = multer.diskStorage({
         console.log(x);
         let m=await UserDetails.findOneAndUpdate({email:data.email},{$push:{responses:x},$inc:{creditsLeft:-1}})
         
-        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text,ans:" " });
 
         
 
@@ -166,7 +167,7 @@ const storage = multer.diskStorage({
     let data =  req.oidc.user;
         console.log(req.body.transcript);
         
-        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:req.body.transcript });
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:req.body.transcript ,ans:" "});
 
         
 
@@ -175,9 +176,40 @@ const storage = multer.diskStorage({
     
   });
   app.post('/question', async(req, res) => {
-    
+       
+  const prompt = req.body.searchQuery;
+  // import requests
+  // var requests = require('requests');
+  const Groq = require('groq-sdk');
+
+  const groq = new Groq({apiKey:'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'});
+  
+    const chatCompletion = await groq.chat.completions.create({
+      "messages": [
+        {
+          "role": "user",
+          "content": `${prompt} ${req.body.transcript}`
+        },
         
-        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:transcript.text });
+      ],
+      "model": "llama3-8b-8192",
+      "temperature": 1,
+      "max_tokens": 1024,
+      "top_p": 1,
+      "stream": false,
+      "stop": null
+    });
+  
+     console.log(chatCompletion.choices[0].message.content);
+  
+  
+  
+  let data=req.oidc.user;
+
+// const data = await response.json();
+// console.log(response)
+        
+        res.render("logedin.ejs", { userData: data, photo: data.picture,tran:req.body.transcript ,ans:chatCompletion.choices[0].message.content});
 
       
   });
