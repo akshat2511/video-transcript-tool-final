@@ -85,31 +85,51 @@ app.use(auth(config));
 
 // req.isAuthenticated is provided from the auth router
 app.get('/', async (req, res) => {
-  //   res.sendFile(path.join(__dirname, (req.oidc.isAuthenticated() ? 'Logged in' : 'land.html')));
-  // res.render((req.oidc.isAuthenticated() ? 'logedin' : 'land'))
-  let verified = req.oidc.isAuthenticated();
-  if (!verified) {
-    res.render("land.ejs");
-  }
-  else {
-    let data = await req.oidc.user;
-    await console.log(req.oidc.user);
+  try {
+    // Check if the user is authenticated
+    let verified = req.oidc.isAuthenticated();
 
-    let userdata = await UserDetails.find({ email: data.email });
-    if (userdata.length == 0) {
-      const u = new UserDetails({ email: data.email })
-      await u.save();
+    if (!verified) {
+      // If not authenticated, render the landing page
+      return res.render("land.ejs");
     }
 
-    //   let userInfo = req.oidc.user;
+    // Get user information
+    let data = req.oidc.user;
     let photo = data.picture;
-    //   let userData = await UserDetails.find({ email: userInfo.email});
-    //   let userCounter = userData[0].counter + 1;
-    //   await user.findOneAndUpdate({ email: data.email }, { counter: userCounter });
-    res.render("logedin.ejs", { userData: data, photo: photo, tran: 'Transcription will be available once the video has been processed.', ans: " " });
 
+    // Check user's credits
+    const userDetails = await UserDetails.findOne({ email: data.email });
+
+    if (!userDetails || userDetails.creditsLeft <= 0) {
+      // Redirect to /dash if credits are insufficient
+      return res.redirect("http://localhost:5000/dash");
+    }
+
+    // Retrieve the transcript from the query parameter
+    let transcript = req.query.transcript || 'Transcription will be available once the video has been processed.';
+    if (req.query.transcript) {
+      let x = new Response({ transcript: req.query.transcript, date: new Date() });
+      await x.save();
+
+      // Update user's responses and decrement credits
+      await UserDetails.findOneAndUpdate(
+        { email: data.email },
+        { $push: { responses: x }, $inc: { creditsLeft: -1 } }
+      );
+    }
+
+    // Render the logged-in page with the transcript
+    res.render("logedin.ejs", {
+      userData: data,
+      photo: photo,
+      tran: transcript,
+      ans: " "
+    });
+  } catch (error) {
+    console.error("Error handling / route:", error);
+    res.status(500).send("Internal Server Error");
   }
-
 });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -280,6 +300,7 @@ app.post("/payment", async (req, res) => {
   const { plan } = req.body;
   let totalAmount = 0;
   let credit = 0;
+console.log(req.body);
 
   if (plan == "basic") {
     totalAmount = 100;
@@ -303,22 +324,24 @@ app.post("/payment", async (req, res) => {
     if (!order) return res.status(500).send("Some error occurred");
 
     const responseOptions = {
+      success: true,
       key: process.env.RAZORPAY_KEY_ID,
       amount: order.amount.toString(),
       currency: order.currency,
       name: req.oidc?.user?.name || "Guest User",
       description: "Credit Purchase",
-      image: "https://ik.imagekit.io/vaibhav11/Koe_Cafe/Additional/tr:w-40,h-40/logo1.jpg",
+      image: "https://lh3.googleusercontent.com/a/AGNmyxYVPmzybxNWLF3EU5ELKmkFYKJqbAp0mpA28GSAaA=s200-c",
       order_id: order.id,
       prefill: {
         email: req.oidc?.user?.email || "example@example.com",
-        contact: "9876543210",
+        contact: "6387488465",
       },
       theme: { color: "#2094f3" },
       credit: credit,
     };
+console.log(responseOptions);
 
-    res.json({...responseOptions,email: req.oidc?.user?.email});
+    res.status(200).send(responseOptions);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error creating Razorpay order");
@@ -326,19 +349,20 @@ app.post("/payment", async (req, res) => {
 });
 
 app.post("/payment/success", async (req, res) => {
-  const { emailId, credit } = req.body;
+  const { email, credit ,razorpayPaymentId, orderCreationId, razorpaySignature} = req.body;
 
   console.log(req.body);
-  // if (!validateSignature(razorpayPaymentId, orderCreationId, razorpaySignature)) {
-  //   return res.status(400).json({ msg: "Transaction not legit!" });
-  // }
+  if (!validateSignature(razorpayPaymentId, orderCreationId, razorpaySignature)) {
+    return res.status(400).json({ msg: "Transaction not legit!" });
+  }
 
 
-  await UserDetails.findOneAndUpdate({ email: emailId }, { $inc: { creditsLeft: credit } });
+ let ak= await UserDetails.findOneAndUpdate({ email: email }, { $inc: { creditsLeft: credit } });
+console.log(ak);
 
   res.status(200).json({
     success: true, message: "Order Placed Successfully!",
-    orderId: razorpayOrderId,
+    orderId: orderCreationId,
     paymentId: razorpayPaymentId
   });
 });
